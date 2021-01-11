@@ -1,6 +1,10 @@
 #include <omp.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+// Program given by prof doesn't make sense, this makes even less sense!
+// hmm
+
 int main(int argc, char** argv) {
 	int tid, nthreads = 4, i, j;
 	long long n = 15;
