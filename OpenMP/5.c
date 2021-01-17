@@ -2,19 +2,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, char** argv) {	
-	time_t t;
-	srand(t);
-	int i, n = 1000;
-	int a[n], b[n];
-	for(i = 0; i < n; i++) 
-		a[i] = b[i] = rand() % 2;
-	long s = 0;
-	#pragma omp parallel for reduction(+:s)
-	for(i = 0; i < n; i++) {
-		printf("\nThread %d at index %d", omp_get_thread_num(), i);
-		s += (a[i] * b[i]);
+int main(int argc, char** argv) {
+	int SIZE = 1000;
+	int i, tid;
+	double a[SIZE], b[SIZE], c[SIZE], d[SIZE];
+	for(i = 0; i < SIZE; i++) {
+		a[i] = rand() % 100;
+		b[i] = rand() % 100;
+		c[i] = d[i] = 0;
 	}
-	printf("\nSum = %ld", s);
+	#pragma omp parallel shared(a, b, c, d, SIZE) private(tid, i) 
+	{
+		tid = omp_get_thread_num();
+		if(tid == 0)
+			printf("\nStarting with %d threads", omp_get_num_threads());
+		#pragma omp sections nowait 
+		{
+			#pragma omp section
+			{
+				for(i = 0; i < SIZE; i++) {
+					c[i] = a[i] + b[i];
+					printf("\nThread %d doing C=A+B at index %d", tid, i);
+				}
+			}
+			#pragma omp section
+			{
+				for(i = 0; i < SIZE; i++) {
+					d[i] = a[i] - b[i];
+					printf("\nThread %d doing D=A-B at index %d", tid, i);
+				}
+			}
+		}
+	}
+	printf("\nDone\n\n");
 	return 0;
-}	
+}

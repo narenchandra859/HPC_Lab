@@ -1,24 +1,25 @@
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 int main(int argc, char** argv) {
-	int rank, numprocs, i;
-	char msg[50];
-	strcpy(msg, "Hello");
+	int numprocs, rank, i, src, dst, s = 0;
+	int tmp;
 	MPI_Status status;
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &numprocs);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	if(rank == 3) {
-		for(i = 0; i < numprocs && i!=3; i++) {
-			MPI_Send(msg, 50, MPI_CHAR, i, 0, MPI_COMM_WORLD);
+	if(rank == 0) {
+		for(i = 1; i < numprocs; i++) {
+			src = i;
+			MPI_Recv(&tmp, 1, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
+			s += tmp; 
 		}
+		printf("\nIn master thread [%d], sum to [%d] is = %d\n\n", rank, numprocs-1, s);
 	}
 	else {
-		MPI_Recv(msg, 50, MPI_CHAR, 3, 0, MPI_COMM_WORLD, &status);
-		printf("\nIn rank [%d], msg received: %s\n\n", rank, msg);
+		dst = 0;
+		MPI_Send(&rank, 1, MPI_INT, dst, 0, MPI_COMM_WORLD);
 	}
 	MPI_Finalize();
 	return 0;

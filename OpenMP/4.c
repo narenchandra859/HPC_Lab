@@ -3,37 +3,25 @@
 #include <stdlib.h>
 
 int main(int argc, char** argv) {
-	int SIZE = 1000;
-	int i, tid;
-	double a[SIZE], b[SIZE], c[SIZE], d[SIZE];
-	for(i = 0; i < SIZE; i++) {
-		a[i] = rand() % 100;
-		b[i] = rand() % 100;
-		c[i] = d[i] = 0;
-	}
-	#pragma omp parallel shared(a, b, c, d, SIZE) private(tid, i) 
+	int i, n = 10;
+	int a[n];
+	for(i = 0; i < n; i++) 
+		a[i] = rand() % 50;
+	int par_mx = 0;
+	omp_lock_t MAXLOCK;
+	omp_init_lock(&MAXLOCK);
+	#pragma omp parallel for 
+	for(int i = 0; i < n; ++i)
 	{
-		tid = omp_get_thread_num();
-		if(tid == 0)
-			printf("\nStarting with %d threads", omp_get_num_threads());
-		#pragma omp sections nowait 
-		{
-			#pragma omp section
-			{
-				for(i = 0; i < SIZE; i++) {
-					c[i] = a[i] + b[i];
-					printf("\nThread %d doing C=A+B at index %d", tid, i);
-				}
-			}
-			#pragma omp section
-			{
-				for(i = 0; i < SIZE; i++) {
-					d[i] = a[i] - b[i];
-					printf("\nThread %d doing D=A-B at index %d", tid, i);
-				}
-			}
-		}
+		printf("\nThread %d", omp_get_thread_num());
+		omp_set_lock(&MAXLOCK);
+		if(a[i] > par_mx) par_mx = a[i];
+		omp_unset_lock(&MAXLOCK);
 	}
-	printf("\nDone\n\n");
+	omp_destroy_lock(&MAXLOCK);
+	int ser_mx;
+	for(i = 0; i < n; i++) 
+		ser_mx = (a[i] > ser_mx)?a[i]:ser_mx;
+	printf("\nMax found by parallel %d, serial %d\n\n", par_mx, ser_mx);
 	return 0;
 }

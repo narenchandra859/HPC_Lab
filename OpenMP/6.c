@@ -1,26 +1,34 @@
 #include <omp.h>
-#include <stdlib.h>
 #include <stdio.h>
-
-int main(int argc, char** argv) {
-	int i, n = 1000;
-	int a[n];
-	for(i = 0; i < n; i++) 
-		a[i] = rand() % 50;
-	int par_mx = 0;
-	#pragma omp parallel shared(a, n) private(i)
-	for(i = 0; i < n; i++) {
-		printf("\nIn thread %d", omp_get_thread_num());
-		#pragma omp critical
-		{
-			printf("\nThread %d in control of critical section", omp_get_thread_num());
-			if(a[i] > par_mx)
-				par_mx = a[i];
+#include <stdlib.h>
+// sieve to find primes
+int main(int argc, char **argv)
+{
+	long long n = 100000000;
+	long long *a = (long long*)malloc((n+1)*sizeof(long long));
+	long long i, k = 2, found, pcount;
+	double t1 = omp_get_wtime(), t2;
+	#pragma omp parallel for 
+	for(int i = 0; i < n; ++i) a[i] = 1;
+	#pragma omp parallel shared(n) firstprivate(k) private(i, found)
+	while (k * k <= n)
+	{
+		#pragma omp for
+		for (i = k * k; i <= n; i += k)
+			a[i] = 0;
+		found = 0;
+		for (i = k + 1; found!=1; i++) {
+			if (a[i]) {
+				k = i;
+				found = 1;
+			}
 		}
 	}
-	int ser_mx;
-	for(i = 0; i < n; i++) 
-		ser_mx = (a[i] > ser_mx)?a[i]:ser_mx;
-	printf("\nMax found by parallel %d, serial %d\n\n", par_mx, ser_mx);
-	return 0;
+	t2 = omp_get_wtime();
+	printf("\n\nTime taken: %.2f seconds\n", t2 - t1);
+	pcount = 0;
+	for (i = 2; i <= n; i++)
+		if(a[i]) pcount++;
+  printf("\n%lld primes between 0 and %lld\n", pcount, n);
+  return 0;
 }
