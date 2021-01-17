@@ -3,8 +3,7 @@
 #include <stdlib.h>
 
 int main(int argc, char** argv) {	
-	time_t t;
-	srand(t);
+	srand(time(NULL));
 	int i, n = 1000;
 	int a[n], b[n];
 	for(i = 0; i < n; i++) 
