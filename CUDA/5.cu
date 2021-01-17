@@ -10,7 +10,6 @@ int memSize = sizeof(float)*size;
 __global__ void matrixMul(float *a, float *b, float *c, int w, int h) {
   int tx = (blockIdx.x*blockDim.x)+threadIdx.x;
   int ty = (blockIdx.y*blockDim.y)+threadIdx.y;
-  printf("\nThread %d : Block %d\n",threadIdx.x, blockIdx.x);
   float v = 0;
   int i;
   for(i = 0; i < w; i++)
