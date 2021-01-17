@@ -2,16 +2,14 @@
 #include <stdio.h>
 #include <math.h>
 #define BLOCK_SIZE 3
-//  FIX:This code will not work for multiple blocks. While calculating index in matrixMul
-//  need to consider the blockIdx as well 
 
 int w = 3, h = 3;
 int size = w*h;
 int memSize = sizeof(float)*size;
 
 __global__ void matrixMul(float *a, float *b, float *c, int w, int h) {
-  int tx = threadIdx.x;
-  int ty = threadIdx.y;
+  int tx = (blockIdx.x*blockDim.x)+threadIdx.x;
+  int ty = (blockIdx.y*blockDim.y)+threadIdx.y;
   printf("\nThread %d : Block %d\n",threadIdx.x, blockIdx.x);
   float v = 0;
   int i;
