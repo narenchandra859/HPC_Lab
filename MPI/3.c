@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 			MPI_Recv(&tmp, 1, MPI_INT, src, 0, MPI_COMM_WORLD, &status);
 			s += tmp; 
 		}
-		printf("\nIn master thread [%d], sum to [%d] is = %d\n\n", rank, numprocs-1, s);
+		printf("\nIn master processor [%d], sum to [%d] is = %d\n\n", rank, numprocs-1, s);
 	}
 	else {
 		dst = 0;
