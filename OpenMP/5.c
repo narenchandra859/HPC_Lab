@@ -34,6 +34,9 @@ int main(int argc, char** argv) {
 			}
 		}
 	}
+	printf("\nResults: \n");
+	for(i = 0; i < SIZE; i++) 
+		printf("\n%lf + %lf = %lf\t%lf + %lf = %lf",a[i],b[i],c[i],a[i],b[i],d[i]);
 	printf("\nDone\n\n");
 	return 0;
 }
