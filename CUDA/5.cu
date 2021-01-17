@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <math.h>
 #define BLOCK_SIZE 3
-// FIX:This code will not work for multiple blocks.
+//  FIX:This code will not work for multiple blocks. While calculating index in matrixMul
+//  need to consider the blockIdx as well 
 
 int w = 3, h = 3;
 int size = w*h;
