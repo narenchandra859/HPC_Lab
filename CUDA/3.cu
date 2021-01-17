@@ -9,8 +9,4 @@ int main(int argc, char** argv) {
 	cudaDeviceSynchronize();
 	printf("\nDone\n");
 	return 0;
-<<<<<<< Updated upstream
 }
-=======
-}
->>>>>>> Stashed changes
