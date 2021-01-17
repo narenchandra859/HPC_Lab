@@ -5,6 +5,7 @@ gcc -fopenmp 1.c
 
 ### MPI
 mpicc 1.c
+
 mpirun -np 4 ./a.out
 
 ### CUDA
