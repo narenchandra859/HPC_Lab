@@ -7,28 +7,28 @@ double func(double x)
 }
 int main(int argc, char *argv[])
 {
-  int NoInterval, interval;
-  int MyRank, Numprocs, Root = 0;
-  double mypi, pi, h, sum, x;
+  int noInt, i;
+  int rank, size;
+  double mypi, h, sum, x;
   MPI_Init(&argc, &argv);
-  MPI_Comm_size(MPI_COMM_WORLD, &Numprocs);
-  MPI_Comm_rank(MPI_COMM_WORLD, &MyRank);
-  if (MyRank == Root)
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  if(!rank)
   {
     printf("\nEnter the number of intervals : ");
-    scanf("%d", &NoInterval);
+    scanf("%d", &noInt);
   }
-  MPI_Bcast(&NoInterval, 1, MPI_INT, 0, MPI_COMM_WORLD);
-  h = 1.0 / (double)NoInterval;
+  MPI_Bcast(&noInt, 1, MPI_INT, 0, MPI_COMM_WORLD);
+  h = 1.0 / (double)noInt;
   sum = 0.0;
-  for (interval = MyRank + 1; interval <= NoInterval; interval += Numprocs)
+  for (i = rank + 1; i <= noInt; i += size)
   {
-    x = h * ((double)interval - 0.5);
+    x = h * ((double)i - 0.5);
     sum += func(x);
   }
   mypi = h * sum;
-  MPI_Reduce(&mypi, &pi, 1, MPI_DOUBLE, MPI_SUM, Root, MPI_COMM_WORLD);
-  if (MyRank == Root)
+  MPI_Reduce(&mypi, &pi, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+  if (!rank)
     printf("\nPi is approximately %.16f\n\n", pi);
   MPI_Finalize();
   return 0;
