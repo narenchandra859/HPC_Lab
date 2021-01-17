@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
 	#pragma omp parallel for reduction(+:s)
 	for(i = 0; i < n; i++) {
 		printf("\nThread %d at index %d", omp_get_thread_num(), i);
-		s += (a[i] * b[i]);
+		s += (a[i] + b[i]);
 	}
 	printf("\nSum = %ld", s);
 	return 0;
