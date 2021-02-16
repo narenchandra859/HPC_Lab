@@ -26,7 +26,6 @@ void printMat(float *arr) {
 }
 
 int main(int argc, char** argv) {
-  srand(rand()%100);
   float *ha, *hb, *hc;
   int i;
   ha = (float*)malloc(memSize);
