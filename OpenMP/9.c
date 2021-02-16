@@ -19,6 +19,6 @@ int main(int argc, char** argv) {
 	{
 		printf("\nIn region 2 (thread %d): a = %d, b = %d", omp_get_thread_num(), a, b);
 	}
-	printf("\nVariable 'a' persists (each thread has its own instance), 'b' doesn't (random value/not initialized in region 2)\n\n");
+	printf("\nVariable 'a' persists across regions (each thread has its own instance), 'b' doesn't (random value/not initialized in region 2)\n\n");
 	return 0;
 }

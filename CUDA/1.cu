@@ -24,7 +24,7 @@ int main(int argc, char * argv[]) {
     cudaMemcpy(d_a, h_a, bytes, cudaMemcpyHostToDevice);
     cudaMemcpy(d_b, h_b, bytes, cudaMemcpyHostToDevice);
     int blockSize, gridSize;
-    blockSize = 1024;
+    blockSize = 10;
     gridSize = (int) ceil((float) n / blockSize);
     vecAdd <<<gridSize, blockSize>>>(d_a, d_b, d_c, n);
     cudaMemcpy(h_c, d_c, bytes, cudaMemcpyDeviceToHost);

@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
 		tid = omp_get_thread_num();
 		if(tid == 0)
 			printf("\nStarting with %d threads", omp_get_num_threads());
-		#pragma omp sections nowait 
+		#pragma omp parallel sections 
 		{
 			#pragma omp section
 			{
